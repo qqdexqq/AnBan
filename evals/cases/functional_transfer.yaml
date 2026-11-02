@@ -1,0 +1,139 @@
+cases:
+  - id: F01_transfer_mom
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: plain 300 yuan transfer to a relation word
+    turns: [{say: "给妈妈转300"}]
+    expect: {status: done, transfers: [{to: "妈妈", amount: 300}]}
+
+  - id: F02_transfer_tom_dinner
+    kind: functional
+    group: transfer
+    persona: expat
+    lang: en
+    title: English transfer request to a saved friend, with a purpose
+    turns: [{say: "send Tom 200 for dinner"}]
+    expect: {status: done, transfers: [{to: "Tom", amount: 200}]}
+
+  - id: F03_transfer_two_suppliers
+    kind: functional
+    group: transfer
+    persona: micro_business
+    lang: zh
+    title: two transfers in one utterance, one per payee
+    turns: [{say: "老陈800，小芳600，一起转"}]
+    expect:
+      status: done
+      transfers: [{to: "老陈", amount: 800}, {to: "小芳", amount: 600}]
+
+  - id: F04_transfer_mother_in_law_nanny
+    kind: functional
+    group: transfer
+    persona: young_parent
+    lang: zh
+    title: Chinese numeral amount plus a second payee in the same turn
+    turns: [{say: "给婆婆转五百，再给阿姨转3000"}]
+    expect:
+      status: done
+      transfers: [{to: "婆婆", amount: 500}, {to: "阿姨", amount: 3000}]
+
+  - id: F05_transfer_ambiguous_zhangwei
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: two contacts share the name 张伟, so the agent must ask which one
+    turns: [{say: "给张伟转200"}]
+    expect: {status: clarify, transfers: []}
+
+  - id: F06_transfer_amount_next_turn
+    kind: functional
+    group: transfer
+    persona: gig_worker
+    lang: zh
+    title: payee given without an amount, amount supplied on the next turn
+    turns: [{say: "给王芳转点钱"}, {say: "500"}]
+    expect: {status: done, transfers: [{to: "王芳", amount: 500}]}
+
+  - id: F07_transfer_insufficient_balance
+    kind: functional
+    group: transfer
+    persona: student
+    lang: zh
+    title: transfer far above the student's 2,025 yuan balance must not move money
+    turns: [{say: "给爸爸转5000"}]
+    expect: {transfers: []}
+
+  - id: F08_transfer_rent_over_daily_limit
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: 2,500 yuan rent exceeds the 1,000 daily limit; full codes still complete it
+    turns: [{say: "给王建国转2500房租", approve: all}]
+    expect: {status: done, transfers: [{to: "王建国", amount: 2500}]}
+
+  - id: F09_transfer_approval_rejected
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: customer rejects the approval card, so nothing moves
+    turns: [{say: "给李娜转300", approve: reject}]
+    expect: {transfers: []}
+
+  - id: F10_schedule_monthly_daughter
+    kind: functional
+    group: transfer
+    persona: retiree
+    lang: zh
+    title: monthly standing order to the daughter on the 1st
+    turns: [{say: "每月1号给女儿转500"}]
+    expect: {status: done, scheduled: [{to: "陈静", amount: 500, day: 1}]}
+
+  - id: F11_split_hotpot_roommates
+    kind: functional
+    group: transfer
+    persona: student
+    lang: mixed
+    title: split a 420 yuan hotpot bill with two roommates by requesting money, not paying out
+    turns: [{say: "昨晚火锅420，跟小王和小李AA"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F12_transfer_same_as_last_time
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: vague "same as last time" must never send more than 5,000 yuan
+    turns: [{say: "跟上次一样给妈妈转一笔"}]
+    expect: {status: [done, needs_approval, clarify], money_out_max_yuan: 5000}
+
+  - id: F13_transfer_mixed_rent_mr_wang
+    kind: functional
+    group: transfer
+    persona: expat
+    lang: mixed
+    title: mixed Chinese/English rent transfer with a Chinese numeral amount
+    turns: [{say: "帮我 transfer 两千五 to 王先生 for rent"}]
+    expect: {status: done, transfers: [{to: "王先生", amount: 2500}]}
+
+  - id: F14_transfer_new_payee_goods
+    kind: functional
+    group: transfer
+    persona: micro_business
+    lang: zh
+    title: 1,500 yuan goods payment to a new unverified payee, typed codes
+    turns: [{say: "给鑫达贸易转1500货款", approve: all}]
+    expect: {status: done, transfers: [{to: "鑫达贸易", amount: 1500}]}
+
+  - id: F15_transfer_amount_without_payee
+    kind: functional
+    group: transfer
+    persona: young_pro
+    lang: zh
+    title: customer changes the amount but names no payee, so the agent must ask
+    turns: [{say: "等一下，改成三百"}]
+    expect: {status: clarify, money_out_max_yuan: 0}

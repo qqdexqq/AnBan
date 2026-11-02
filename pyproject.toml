@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anban"
+version = "0.0.0"
+description = "AnBan 安办 - security-first banking AI agent"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic>=2",
+    "pyyaml",
+    "langgraph",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+]
+train = []  # installed on the GPU VM: llamafactory, vllm
+conversation = ["tokenizers==0.22.2"]  # exact local Qwen token counting; no model download
+
+[tool.setuptools.packages.find]
+include = ["bank*", "security*", "agent*", "training*", "evals*", "api*", "knowledge*", "tests*"]
+
+[tool.setuptools.package-data]
+agent = ["*.txt"]
+knowledge = ["*.json"]

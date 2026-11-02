@@ -1,0 +1,122 @@
+[
+  {
+    "id": "delayed_arrival",
+    "topic": "Transfer arrival options",
+    "keywords_zh": ["到账", "转账", "撤销", "2小时", "24小时", "次日到账"],
+    "keywords_en": ["arrival", "transfer", "cancel", "2 hours", "24 hours", "next-day"],
+    "zh": "银发〔2016〕261号规定，转账到账方式可由客户选择：实时到账、普通到账（2小时）或次日到账（24小时）。在到账前，客户可以撤销转账。AnBan 默认使用2小时到账，可在设置中改为24小时。",
+    "en": "Under PBOC notice Yinfa [2016] No. 261, customers choose real-time arrival, normal arrival (2 hours) or next-day arrival (24 hours) for transfers. A held transfer can be cancelled before it arrives. AnBan defaults to 2 hours; Settings can switch to 24 hours.",
+    "source": "PBOC 银发〔2016〕261号",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "recall",
+    "topic": "Recalling money already received",
+    "keywords_zh": ["追回", "退汇", "冻结", "不当得利", "96110", "110", "收款人"],
+    "keywords_en": ["recall", "recover", "reverse", "freeze", "unjust enrichment", "96110", "110", "payee"],
+    "zh": "钱一旦到账，银行无法撤销，也不能冻结收款人账户或透露收款人信息。银行可以请收款银行协助，向收款人提出自愿退回的请求。如对方拒绝，客户可依民法典第122条以不当得利起诉。若遭遇诈骗，应立即拨打96110或110，并保留凭证。",
+    "en": "Once money has arrived, the bank cannot reverse it, freeze the payee's account or reveal the payee. The bank can ask the receiving bank to request a voluntary return. If that is refused, the customer can sue for unjust enrichment under Civil Code article 122. If scammed, call 96110 or 110 at once and keep receipts.",
+    "source": "民法典 第122条",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "deposit_insurance",
+    "topic": "Deposit insurance",
+    "keywords_zh": ["存款保险", "50万", "保障", "存款", "赔付"],
+    "keywords_en": ["deposit insurance", "500,000", "protection", "insured", "deposit"],
+    "zh": "同一存款人在同一家银行的存款，本金加利息最高保障人民币50万元（¥500,000）。",
+    "en": "Deposits are protected up to ¥500,000 per depositor per bank, including principal and interest.",
+    "source": "《存款保险条例》(2015) 第5条",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "fx_quota",
+    "topic": "Individual foreign-exchange quota",
+    "keywords_zh": ["购汇", "外汇", "美元", "5万", "额度", "年度", "境外买房", "分拆"],
+    "keywords_en": ["how much", "foreign exchange", "buy", "dollar", "per year", "quota", "FX"],
+    "zh": "每人每年凭身份证件可购汇等值5万美元。购汇须申报用途。不得用于境外买房、证券投资、人寿保险或投资性保险。借用亲属额度分拆购汇属于违规行为。",
+    "en": "Each person may buy foreign exchange up to the equivalent of US$50,000 per year with ID. A purpose must be declared. It cannot be used for overseas property, securities, life insurance or investment-type insurance. Splitting a purchase across relatives' quotas is a violation.",
+    "source": "SAFE individual FX rules (2024 notice)",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "complaints",
+    "topic": "Bank complaints",
+    "keywords_zh": ["投诉", "15天", "30天", "12378", "监管"],
+    "keywords_en": ["complaint", "15 days", "30 days", "12378", "regulator"],
+    "zh": "银行应在15天内处理投诉，复杂案件可延长至30天。如对处理结果不满意，可拨打监管机构消费者热线12378。",
+    "en": "Banks must handle a complaint within 15 days; complex cases may be extended to 30 days. If you are unhappy with the result, call the regulator's consumer hotline 12378.",
+    "source": "《银行业保险业消费投诉处理管理办法》",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "anti_fraud",
+    "topic": "Anti-fraud basics",
+    "keywords_zh": ["冒充警察", "安全账户", "验证码", "诈骗", "96110", "转账"],
+    "keywords_en": ["safe account", "police", "SMS code", "scam", "96110", "transfer"],
+    "zh": "警察、法院和银行工作人员不会要求你把钱转到“安全账户”。不要向任何人透露短信验证码。全国反诈热线是96110。",
+    "en": "Police, courts and bank staff never ask you to move money to a \"safe account\". Never share SMS codes. The national anti-fraud hotline is 96110.",
+    "source": "《反电信网络诈骗法》(2022)",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "large_deposit_cd",
+    "topic": "Large-denomination certificates of deposit",
+    "keywords_zh": ["大额存单", "20万", "定期存款", "提前支取", "活期"],
+    "keywords_en": ["large-denomination", "certificate of deposit", "200,000", "term deposit", "early withdrawal"],
+    "zh": "个人大额存单的起存金额为20万元。定期存款提前支取，通常按活期存款利率计算已存期间的利息。",
+    "en": "Large-denomination certificates of deposit (大额存单) for individuals start at ¥200,000. Withdrawing a term deposit early usually pays only the demand-deposit rate for the time held.",
+    "source": "PBOC 《大额存单管理暂行办法》",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "suitability",
+    "topic": "Product suitability and risk ratings",
+    "keywords_zh": ["风险测评", "风险等级", "R1", "C1", "评估", "问卷", "理财"],
+    "keywords_en": ["risk rating", "R1", "C1", "assessment", "questionnaire", "suitability"],
+    "zh": "风险问卷把产品评为R1至R5，把客户评为C1至C5。Cn级客户只能购买R1至Rn级产品。风险评估有效期为1年，到期后必须重新测评。问卷必须由客户本人作答。",
+    "en": "Products are rated R1–R5 and customers C1–C5 by a risk questionnaire. A Cn customer may buy only R1 to Rn products. The assessment is valid for 1 year and must be retaken after that. The customer must answer it themselves.",
+    "source": "《商业银行理财业务监督管理办法》 suitability rules",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "personal_pension",
+    "topic": "Personal pension tax rules",
+    "keywords_zh": ["个人养老金", "养老金", "12,000", "税前扣除", "3%"],
+    "keywords_en": ["personal pension", "12,000", "tax-deductible", "3%", "retirement"],
+    "zh": "个人养老金每年缴费最高12,000元，可以在税前扣除。领取时按3%的税率缴税。",
+    "en": "Personal pension (个人养老金) contributions up to ¥12,000 per year are tax-deductible. Withdrawals are taxed at 3%.",
+    "source": "State Taxation Administration, 2024",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "account_tiers",
+    "topic": "Class II account limits",
+    "keywords_zh": ["II类账户", "二类账户", "限额", "10,000", "200,000", "非绑定账户"],
+    "keywords_en": ["class II", "tier", "limit", "10,000", "200,000", "non-linked"],
+    "zh": "II类账户向非绑定账户转账或收款，每日限额10,000元，每年限额200,000元。",
+    "en": "Class II accounts can pay to or receive from non-linked accounts up to ¥10,000 per day and ¥200,000 per year.",
+    "source": "PBOC account classification rules",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "installment_rate",
+    "topic": "Instalment real annual rate",
+    "keywords_zh": ["分期", "手续费", "年化利率", "实际利率", "2022"],
+    "keywords_en": ["instalment", "installment", "fee", "annualised rate", "annualized rate", "2022"],
+    "zh": "分期手续费按原始本金收取，会使实际年化利率约为名义利率的2倍。自2022年起，银行必须在客户同意前展示年化利率。",
+    "en": "Instalment fees charged on the original principal make the real annual rate about twice the nominal one. Since 2022 banks must show the annualised rate before you agree.",
+    "source": "2022 银保监会 信用卡业务通知",
+    "checked": "2026-10-26"
+  },
+  {
+    "id": "account_restriction",
+    "topic": "Non-counter payment restrictions",
+    "keywords_zh": ["非柜面限制", "非柜面", "身份证过期", "账户异常", "睡眠账户", "解除限制"],
+    "keywords_en": ["non-counter", "restricted", "expired ID", "unusual activity", "dormant account", "branch"],
+    "zh": "如果非柜面支付受到限制，常见原因是身份证件过期、交易异常或账户长期未使用。请携带身份证到网点核实并解除限制。",
+    "en": "If online or non-counter payments are restricted (非柜面限制), common reasons are an expired ID, unusual activity or a dormant account. Bring your ID to a branch to have it reviewed and lifted.",
+    "source": "反诈 account controls practice",
+    "checked": "2026-10-26"
+  }
+]

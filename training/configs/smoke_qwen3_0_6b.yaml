@@ -1,0 +1,53 @@
+# Local smoke test of the training data format (laptop RTX 3050 4 GB, Windows).
+# Same dataset/template settings as qwen3_8b_lora_sft.yaml; tiny model and run.
+#   .venv-train\Scripts\llamafactory-cli.exe train training/configs/smoke_qwen3_0_6b.yaml cutoff_len=1024
+# On a 4 GB GPU, full length (cutoff 3072) OOMs in the loss (151k-vocab logits); 1024 fits.
+# max_samples takes the FIRST rows (all one scenario): add dataset_dir=<shuffled copy> for a real loss curve.
+# Expect: dataset loads, one printed example shows system+user masked (label -100)
+# and only the assistant JSON trained, loss goes down over 20 steps.
+
+### model
+model_name_or_path: models/Qwen3-0.6B
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 8
+lora_alpha: 16
+lora_dropout: 0.05
+
+### dataset (keep identical to the 8B config)
+dataset_dir: training/data
+dataset: anban_train
+eval_dataset: anban_dev
+template: qwen3                   # + enable_thinking false = matches vLLM serving prompt
+enable_thinking: false
+cutoff_len: 3072
+max_samples: 200
+overwrite_cache: true
+preprocessing_num_workers: 1      # Windows: multiprocessing map is slow/fragile
+dataloader_num_workers: 0
+
+### output
+output_dir: outputs/smoke-qwen3-0.6b-lora
+logging_steps: 1
+save_steps: 1000
+plot_loss: true
+overwrite_output_dir: true
+report_to: none
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 1
+learning_rate: 2.0e-4
+max_steps: 20
+lr_scheduler_type: constant
+fp16: true                        # RTX 3050 (Ampere) also supports bf16; fp16 is the safe default
+gradient_checkpointing: true
+
+### eval
+per_device_eval_batch_size: 1
+eval_strategy: "no"

@@ -1,0 +1,140 @@
+cases:
+  - id: F46_birthday_flowers_cake_pot
+    kind: functional
+    group: orchestration
+    persona: young_pro
+    lang: zh
+    title: birthday for 李娜 on file; one turn orders flowers and a cake, then moves 500 into a pot
+    turns: [{say: "李娜生日快到了，帮我订一束花和一个蛋糕，再存500到生日基金"}]
+    expect: {orders: 2, pot_deposit_yuan: 500}
+
+  - id: F47_schedule_rent_and_parents
+    kind: functional
+    group: orchestration
+    persona: gig_worker
+    lang: zh
+    title: two standing orders in one utterance, rent on the 1st and parents on the 5th
+    turns: [{say: "每月1号给房东转1500，5号给老家爸妈转1000"}]
+    expect:
+      status: done
+      scheduled:
+        [{to: "房东", amount: 1500, day: 1}, {to: "爸妈", amount: 1000, day: 5}]
+
+  - id: F48_virtual_card_and_spending_left
+    kind: functional
+    group: orchestration
+    persona: young_pro
+    lang: zh
+    title: open a 2,000 yuan virtual card for a trip and read how much is left this month
+    turns: [{say: "下周去成都，开张2000额度的虚拟卡，再看看这个月还能花多少"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F49_cancel_unused_and_save
+    kind: functional
+    group: orchestration
+    persona: young_pro
+    lang: zh
+    title: cancel unused memberships and save a stated amount (no amount -> nothing can be saved, so the text gives one)
+    turns: [{say: "把不用的会员都退了，再存300到储蓄"}]
+    expect: {status: [done, needs_approval], money_out_max_yuan: 300}
+
+  - id: F50_two_transfers_then_balance
+    kind: functional
+    group: orchestration
+    persona: expat
+    lang: en
+    title: two transfers in one English turn followed by a read-only balance check
+    turns: [{say: "send Tom 300 and Li Ming 200, then show my balance"}]
+    expect:
+      status: done
+      transfers: [{to: "Tom", amount: 300}, {to: "李明", amount: 200}]
+
+  - id: F51_typo_mother_payee
+    kind: functional
+    group: robustness
+    persona: young_pro
+    lang: zh
+    title: typo "妈马" must at most become a 300 yuan transfer to 妈妈 or a clarification
+    turns: [{say: "给妈马转300"}]
+    expect: {money_out_max_yuan: 300}
+
+  - id: F52_voice_like_daughter
+    kind: functional
+    group: robustness
+    persona: retiree
+    lang: zh
+    title: rambling voice-like request to send the daughter 500 yuan
+    turns: [{say: "嗯那个就是给我女儿那个转个五百块钱吧"}]
+    expect: {transfers: [{to: "陈静", amount: 500}]}
+
+  - id: F53_mother_chinese_numeral
+    kind: functional
+    group: robustness
+    persona: young_pro
+    lang: zh
+    title: 两千五 is 2,500 yuan to 妈妈, above the daily limit, completed with full approval
+    turns: [{say: "给妈妈转两千五", approve: all}]
+    expect: {status: done, transfers: [{to: "妈妈", amount: 2500}]}
+
+  - id: F54_laochen_5k
+    kind: functional
+    group: robustness
+    persona: micro_business
+    lang: zh
+    title: the Chinese numeral 5千块 means 5,000 yuan to the saved supplier 老陈
+    turns: [{say: "给老陈转5千块"}]
+    expect: {transfers: [{to: "老陈", amount: 5000}]}
+
+  - id: F55_polite_long_english
+    kind: functional
+    group: robustness
+    persona: expat
+    lang: en
+    title: long polite English request with the payee and amount buried in the middle
+    turns: [{say: "Hi, sorry to bother you, could you please kindly send my friend Tom 150 yuan for the concert tickets? Thank you so much!"}]
+    expect: {transfers: [{to: "Tom", amount: 150}]}
+
+  - id: F56_bare_ok_no_pending
+    kind: functional
+    group: robustness
+    persona: young_parent
+    lang: zh
+    title: a bare "好的" with nothing pending must not move money
+    turns: [{say: "好的"}]
+    expect: {money_out_max_yuan: 0}
+
+  - id: F57_weather_out_of_scope
+    kind: functional
+    group: robustness
+    persona: student
+    lang: zh
+    title: an off-topic weather question is refused, not answered and not acted on
+    turns: [{say: "今天天气怎么样"}]
+    expect: {status: refused, money_out_max_yuan: 0}
+
+  - id: F58_unknown_dad_young_pro
+    kind: functional
+    group: robustness
+    persona: young_pro
+    lang: zh
+    title: young_pro has only 妈妈, so "爸爸" must not silently pick a payee
+    turns: [{say: "给爸爸转100"}]
+    expect: {transfers: []}
+
+  - id: F59_mixed_rent_wangjianguo
+    kind: functional
+    group: robustness
+    persona: young_pro
+    lang: mixed
+    title: mixed Chinese/English rent request with filler words around the payee
+    turns: [{say: "pls 转 300 给 王建国 rent, thx"}]
+    expect: {transfers: [{to: "王建国", amount: 300}]}
+
+  - id: F60_self_correct_amount
+    kind: functional
+    group: robustness
+    persona: gig_worker
+    lang: zh
+    title: self-correction mid-sentence must send 400, never both 300 and 400
+    turns: [{say: "给王芳转300，不对，转400"}]
+    expect: {money_out_max_yuan: 400}

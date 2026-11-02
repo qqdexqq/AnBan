@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+.venv*/
+*.db
+.env
+models/
+outputs/
+training/data/
+training/data_v3*/
+training/data_v4*/
+training/data_errand*/
+*.egg-info/
+.pytest_cache/
+tools/usage_report.html
+training/data_pilot/
+# secrets / env variants
+.env.*
+!.env.example
+# training artefacts (teacher cache lives in training/data/; models/outputs above)
+*.safetensors
+*.gguf
+saves/
+
+# web app
+web/node_modules/
+web/dist/
+
+# research
+research_notes/

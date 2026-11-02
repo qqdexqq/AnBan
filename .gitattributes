@@ -1,0 +1,3 @@
+# Frozen model prompts: byte-exact, never line-ending converted.
+agent/prompts_r2.txt -text
+agent/prompts_r3.txt -text

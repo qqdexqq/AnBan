@@ -1,0 +1,87 @@
+# LLaMA-Factory LoRA SFT r3: AnBan planner on Qwen3-8B, training data v3, SIX RTX 4090 (DDP).
+# Keeps the r2 recipe (LoRA rank 32 / alpha 64, template qwen3 + enable_thinking false,
+# lr 1e-4 cosine, 2 epochs, bf16, eval every 200 steps) and writes to its own folder.
+#
+# IMPORTANT: ordinary distributed data parallelism does NOT pool VRAM. Each card holds a
+# full 8B bf16 copy (~16 GB) plus activations, so per-device batch 1 at cutoff 4096 is the
+# point of this config. Throughput gains depend on PCIe/topology and must be measured; VRAM is not pooled.
+#
+# Launch from the repo root on the 6-GPU VM (LLaMA-Factory auto-launches torchrun when
+# more than one GPU is visible; NPROC_PER_NODE pins the world size explicitly):
+#   FORCE_TORCHRUN=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5 NPROC_PER_NODE=6 .venv-train/bin/llamafactory-cli train training/configs/qwen3_8b_lora_sft_r3_6gpu.yaml
+# or through the existing script (it calls the same CLI, so it also takes the torchrun path):
+#   NPROC_PER_NODE=6 CONFIG=training/configs/qwen3_8b_lora_sft_r3_6gpu.yaml RUN_TAG=r3_6gpu \
+#     SKIP_BASE=1 bash scripts/autodl_train_eval.sh
+# NPROC_PER_NODE only pins the world size; the launcher spawns one worker per *visible* GPU, so
+# restrict the cards with CUDA_VISIBLE_DEVICES=0,1,2,3,4,5 if the box exposes more than six.
+#
+# Eval caveat: scripts/autodl_train_eval.sh hardcodes TEST_DATA=training/data/test.jsonl (data v2)
+# and that path is not env-overridable, so its scorecard scores r3 on the v2 test set. Score the
+# v3 held-out set directly into a separate dir (eval_planner resumes/merges by sample id, so never
+# share one dir between test sets), with vLLM already serving the adapter:
+#   .venv/bin/python -m training.eval_planner --data training/data_v3/test.jsonl --planner local \
+#     --base-url http://127.0.0.1:8000/v1 --model anban --workers 16 \
+#     --out outputs/eval/qwen3_8b_lora_r3_6gpu_v3test
+#
+# Run the successful single-card full-sequence smoke BEFORE this distributed run
+# (distributed training only after its own smoke succeeds).
+#
+# v3 data: training/data_v3/ must exist with dataset_info.json defining anban_train and
+# anban_dev (LLaMA-Factory reads dataset_info.json under dataset_dir) plus train/dev jsonl.
+# r2 lengths measured 1399-1778 tokens (p99 1727); v3 lengths are NOT measured yet.
+#
+# cutoff_len 4096 is TENTATIVE. Do not accept it before tomorrow's full-sequence single-card
+# smoke prints the Qwen3 token lengths for training/data_v3: accept only if the max length
+# (not just p99) is <= 4096 AND a batch of 1 at 4096 fits on one 24 GB card. Adding GPUs does
+# not fix a per-device OOM: use a verified memory-saving configuration, never truncate labels.
+
+### model
+model_name_or_path: /path/to/Qwen3-8B   # local copy (ModelScope download, see docs/TRAINING.md)
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 32
+lora_alpha: 64
+lora_dropout: 0.05
+
+### dataset
+dataset_dir: training/data_v3
+dataset: anban_train
+eval_dataset: anban_dev
+# Planner answers with JSON only. Use `qwen3` + enable_thinking=false, NOT `qwen3_nothink`:
+# this puts an empty "<think>\n\n</think>\n\n" at the end of the (masked) prompt, which is
+# byte-identical to what vLLM renders for chat_template_kwargs.enable_thinking=False at
+# serve time. qwen3_nothink omits it -> train/serve prompt mismatch (verified, LLaMA-Factory 0.9.5).
+template: qwen3
+enable_thinking: false
+cutoff_len: 4096                   # TENTATIVE: gate on measured v3 token lengths (see header)
+overwrite_cache: false              # rank 0 rebuilds the tokenized cache, other ranks reuse it;
+                                   # set false to reuse a frozen v3 cache on later runs
+preprocessing_num_workers: 8
+
+### output
+output_dir: outputs/anban-r3-6gpu
+logging_steps: 10
+save_steps: 200
+plot_loss: true
+overwrite_output_dir: false        # never clobber an existing r3 run/checkpoints
+report_to: none
+
+### train
+per_device_train_batch_size: 1     # requires successful full-length VRAM smoke
+gradient_accumulation_steps: 3     # effective global batch 1 x 3 x 6 GPUs = 18
+learning_rate: 1.0e-4
+num_train_epochs: 2.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.05
+bf16: true
+gradient_checkpointing: true
+
+### eval
+per_device_eval_batch_size: 1     # full 4096-token eval loss on each card
+eval_strategy: steps
+eval_steps: 200

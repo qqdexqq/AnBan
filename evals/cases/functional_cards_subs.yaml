@@ -1,0 +1,135 @@
+cases:
+  - id: F31_freeze_lost_physical_card
+    kind: functional
+    group: cards
+    persona: young_pro
+    lang: zh
+    title: report the physical card lost and freeze it before anyone can use it
+    turns: [{say: "我的卡丢了，先冻结"}]
+    expect: {card_status: frozen}
+
+  - id: F32_report_card_lost_en
+    kind: functional
+    group: cards
+    persona: expat
+    lang: en
+    title: English report of a lost card sets it to lost, not just frozen
+    turns: [{say: "I lost my card, report it lost"}]
+    expect: {card_status: lost}
+
+  - id: F33_freeze_then_unfreeze
+    kind: functional
+    group: cards
+    persona: gig_worker
+    lang: zh
+    title: freeze the card on one turn, then unfreeze it on the next
+    turns: [{say: "冻结我的卡"}, {say: "把卡解冻"}]
+    expect: {card_status: active}
+
+  - id: F34_create_virtual_card_500
+    kind: functional
+    group: cards
+    persona: young_pro
+    lang: zh
+    title: open a 500 yuan virtual card; the limit is not money spent
+    turns: [{say: "开一张500额度的虚拟卡"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F35_online_limit_2000_en
+    kind: functional
+    group: cards
+    persona: expat
+    lang: en
+    title: raise the online card limit to 2,000 yuan, no money moves
+    turns: [{say: "set my online card limit to 2000"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F36_card_status_question
+    kind: functional
+    group: cards
+    persona: retiree
+    lang: zh
+    title: plain question about the card status is read-only and leaves it active
+    turns: [{say: "我的卡现在什么状态"}]
+    expect: {money_out_max_yuan: 0, card_status: active}
+
+  - id: F37_freeze_rejected_stays_active
+    kind: functional
+    group: cards
+    persona: student
+    lang: mixed
+    title: mixed-language freeze request whose approval is rejected leaves the card active
+    turns: [{say: "freeze 我的卡，我找不到了", approve: reject}]
+    expect: {card_status: active}
+
+  - id: F38_list_subscriptions
+    kind: functional
+    group: subs
+    persona: young_pro
+    lang: zh
+    title: list the customer's subscriptions, read-only
+    turns: [{say: "我有哪些会员"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F39_cancel_iqiyi
+    kind: functional
+    group: subs
+    persona: young_pro
+    lang: zh
+    title: cancel the 爱奇艺 VIP subscription and nothing else
+    turns: [{say: "把爱奇艺取消了"}]
+    expect: {subscriptions_cancelled: ["爱奇艺"]}
+
+  - id: F40_cancel_spotify_en
+    kind: functional
+    group: subs
+    persona: expat
+    lang: en
+    title: English cancellation of Spotify
+    turns: [{say: "cancel Spotify"}]
+    expect: {subscriptions_cancelled: ["Spotify"]}
+
+  - id: F41_cancel_square_dance
+    kind: functional
+    group: subs
+    persona: retiree
+    lang: zh
+    title: cancel the 广场舞 membership using the membership word, not the exact name
+    turns: [{say: "广场舞会员不要了"}]
+    expect: {subscriptions_cancelled: ["广场舞"]}
+
+  - id: F42_which_to_cancel_advice
+    kind: functional
+    group: subs
+    persona: young_parent
+    lang: zh
+    title: asking for advice must not cancel any subscription
+    turns: [{say: "我该取消哪些会员？"}]
+    expect: {subscriptions_cancelled: []}
+
+  - id: F43_cancel_king_of_glory
+    kind: functional
+    group: subs
+    persona: student
+    lang: zh
+    title: cancel the 王者荣耀 monthly card
+    turns: [{say: "王者荣耀月卡退了"}]
+    expect: {subscriptions_cancelled: ["王者荣耀"]}
+
+  - id: F44_unused_subs_en
+    kind: functional
+    group: subs
+    persona: expat
+    lang: en
+    title: which subscriptions are unused is an information request, so nothing is cancelled
+    turns: [{say: "which of my subscriptions haven't I used"}]
+    expect: {subscriptions_cancelled: [], money_out_max_yuan: 0}
+
+  - id: F45_cancel_netease_and_qq
+    kind: functional
+    group: subs
+    persona: young_pro
+    lang: mixed
+    title: mixed-language request cancels two named music subscriptions in one turn
+    turns: [{say: "cancel 网易云 和 QQ音乐"}]
+    expect: {subscriptions_cancelled: ["网易云", "QQ音乐"]}

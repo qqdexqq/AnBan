@@ -1,0 +1,57 @@
+# LLaMA-Factory LoRA SFT r2: AnBan planner on Qwen3-8B, training data v2. Same settings as r1;
+# writes to its own folder so the r1 adapter stays for comparison.
+# Run from the repo root on the VM:
+#   llamafactory-cli train training/configs/qwen3_8b_lora_sft.yaml
+# Data v2 (Oct 24). Qwen3 tokenizer: full samples 1399-1778 tokens, p99 1727,
+# answers <= 194 tokens. cutoff 3072 truncates nothing.
+
+### model
+model_name_or_path: /path/to/Qwen3-8B   # local copy (ModelScope download, see docs/TRAINING.md)
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 32
+lora_alpha: 64
+lora_dropout: 0.05
+
+### dataset
+dataset_dir: training/data
+dataset: anban_train
+eval_dataset: anban_dev
+# Planner answers with JSON only. Use `qwen3` + enable_thinking=false, NOT `qwen3_nothink`:
+# this puts an empty "<think>\n\n</think>\n\n" at the end of the (masked) prompt, which is
+# byte-identical to what vLLM renders for chat_template_kwargs.enable_thinking=False at
+# serve time. qwen3_nothink omits it -> train/serve prompt mismatch (verified, LLaMA-Factory 0.9.5).
+template: qwen3
+enable_thinking: false
+cutoff_len: 3072
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+### output
+output_dir: outputs/qwen3-8b-anban-lora-r2
+logging_steps: 10
+save_steps: 200
+save_total_limit: 3
+plot_loss: true
+overwrite_output_dir: true
+report_to: none
+
+### train
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4     # effective batch 16 -> ~523 steps/epoch on 8.4k samples (data v2)
+learning_rate: 1.0e-4
+num_train_epochs: 2.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.05
+bf16: true
+gradient_checkpointing: true
+
+### eval
+per_device_eval_batch_size: 4
+eval_strategy: steps
+eval_steps: 200

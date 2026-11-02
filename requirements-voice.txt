@@ -1,0 +1,6 @@
+# Install in a separate speech environment; keep the planner/training env intact.
+# Install a suitable CUDA PyTorch build separately for the target GPU.
+qwen-asr==0.0.6
+av==19.0.2
+fastapi
+uvicorn

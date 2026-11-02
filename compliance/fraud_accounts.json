@@ -1,0 +1,7 @@
+{
+  "_note": "SIMULATED national fraud-account list (国家反诈中心). A real bank queries the national system; this demo uses a local list.",
+  "accounts": [
+    {"account_no": "6222021234567890123", "reason": "\"safe account\" in police-impersonation reports"},
+    {"account_no": "2659684971931393", "reason": "collects payments for fake health products from elderly customers"}
+  ]
+}

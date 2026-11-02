@@ -1,0 +1,148 @@
+# AnBan customer segments (personas) for seed data + training data generation.
+# Each persona drives: (1) the mock-bank seed (contacts, income, txns, subs),
+# (2) the teacher LLM's phrasing style, (3) scenario sampling weights.
+# All people are fictional. Weights in scenario_weights sum to ~1.0.
+# held_out: true => persona appears ONLY in the test split (generalisation check).
+
+version: 1
+
+segments:
+  - id: young_pro
+    name: Young urban professional
+    demo_customer: Chen Hao (陈浩), 31, product manager, Shenzhen
+    share_of_users: 0.25
+    language: {zh: 0.45, en: 0.15, mixed: 0.40}   # mixed = 中英夹杂, e.g. "帮我 transfer 300 给 zhang wei"
+    channel: [app_text, voice]
+    style: short, lowercase, abbreviations, pinyin names, assumes context ("the usual", "same as last time")
+    finance:
+      monthly_income: [18000, 30000]
+      balance_range: [15000, 60000]
+      rent: {payee_relation: landlord, amount: 3500, day: 1}
+      subscriptions: [爱奇艺 VIP, 网易云音乐, QQ音乐, Keep, 百度网盘, iCloud]   # one forgotten, unused 60+ days
+      merchants: [美团, 饿了么, 滴滴, 盒马, 京东, 瑞幸, 淘宝]
+    contacts:
+      - {relation: spouse, name: 李娜 Lina, birthday_in_days: 12}
+      - {relation: friend, name: 张伟, note: badminton club}       # duplicate name on purpose
+      - {relation: colleague, name: 张伟}
+      - {relation: parent, name: 妈妈}
+      - {relation: landlord, name: 王建国}
+    scenario_weights: {transfer: 0.30, bills: 0.20, subscriptions: 0.15, cards: 0.10, wealth: 0.10, orchestration: 0.15}
+    risk_notes: confirmation fatigue; taps fast without reading
+
+  - id: student
+    name: University student
+    demo_customer: Liu Yang (刘洋), 20, undergraduate, Wuhan
+    share_of_users: 0.15
+    language: {zh: 0.70, en: 0.05, mixed: 0.25}
+    channel: [app_text]
+    style: slang, emoji, internet words (AA一下, 白嫖, 续费刺客), split bills with roommates
+    finance:
+      monthly_income: [1500, 3000]        # allowance from parents + part-time
+      balance_range: [200, 4000]
+      subscriptions: [B站大会员, 腾讯视频, 王者荣耀 月卡, 夸克网盘]
+      merchants: [美团, 拼多多, 食堂, 瑞幸, 滴滴]
+    contacts:
+      - {relation: parent, name: 爸爸}
+      - {relation: friend, name: 室友 小王}
+      - {relation: friend, name: 室友 小李}
+      - {relation: friend, name: 室友 阿杰}
+    scenario_weights: {transfer: 0.40, bills: 0.20, subscriptions: 0.25, cards: 0.05, wealth: 0.0, orchestration: 0.10}
+    risk_notes: low balance (can_cover = no is common); target of "兼职刷单" and loan scams
+
+  - id: gig_worker
+    name: Gig / delivery worker, sends money home
+    demo_customer: Zhou Qiang (周强), 38, delivery rider, Dongguan, family in Henan
+    share_of_users: 0.15
+    language: {zh: 1.0, en: 0.0, mixed: 0.0}
+    channel: [voice, app_text]
+    style: voice-transcribed, no punctuation, colloquial, dialect words, numbers in Chinese (三百块, 两千)
+    finance:
+      monthly_income: [6000, 9000]        # many small incoming payouts
+      balance_range: [500, 8000]
+      rent: {payee_relation: landlord, amount: 1200, day: 5}
+      merchants: [加油站, 电动车维修, 便利店, 拼多多]
+    contacts:
+      - {relation: spouse, name: 王芳}
+      - {relation: parent, name: 老家 爸妈}
+      - {relation: child, name: 周小宝, note: school fees}
+    scenario_weights: {transfer: 0.50, bills: 0.20, subscriptions: 0.05, cards: 0.10, wealth: 0.05, orchestration: 0.10}
+    risk_notes: monthly remittance home often > ¥1,000 => Red tier is normal for this user; must not feel punished
+
+  - id: retiree
+    name: Elderly retiree
+    demo_customer: Zhao Guilan (赵桂兰), 68, retired teacher, Chengdu
+    share_of_users: 0.15
+    language: {zh: 1.0, en: 0.0, mixed: 0.0}
+    channel: [voice]
+    style: polite, long, indirect ("我想问一下那个…"), repeats herself, unsure of app terms
+    finance:
+      monthly_income: [4000, 6000]        # pension
+      balance_range: [30000, 200000]      # savings: high-value scam target
+      subscriptions: [老年手机 套餐, 广场舞 会员]
+      merchants: [菜市场, 药店, 社区医院, 超市]
+    contacts:
+      - {relation: child, name: 女儿 陈静, note: family co-approver}
+      - {relation: child, name: 儿子}
+      - {relation: other, name: 社区王阿姨}
+    scenario_weights: {transfer: 0.25, bills: 0.15, subscriptions: 0.05, cards: 0.15, wealth: 0.15, orchestration: 0.05, scam: 0.20}
+    risk_notes: primary target of "公检法/安全账户" scams and fake health products; elder mode = lower limits + family co-approve Red
+
+  - id: young_parent
+    name: Young family parent
+    demo_customer: Wu Min (吴敏), 35, accountant, Hangzhou
+    share_of_users: 0.15
+    language: {zh: 0.85, en: 0.0, mixed: 0.15}
+    channel: [app_text, voice]
+    style: organised, multi-step requests, dates and recurring plans ("每月15号")
+    finance:
+      monthly_income: [15000, 25000]
+      balance_range: [20000, 80000]
+      subscriptions: [少儿英语 App, 儿童绘本 会员, 爱奇艺 VIP, 家庭宽带]
+      merchants: [盒马, 京东, 幼儿园, 儿童医院, 美团]
+    contacts:
+      - {relation: spouse, name: 林涛}
+      - {relation: other, name: 幼儿园, note: tuition payee}
+      - {relation: parent, name: 婆婆}
+      - {relation: other, name: 阿姨 (nanny), note: monthly salary}
+    scenario_weights: {transfer: 0.25, bills: 0.20, subscriptions: 0.15, cards: 0.05, wealth: 0.15, orchestration: 0.20}
+    risk_notes: scheduled payments; payee swap mid-flow; tuition > ¥1,000 => Red
+
+  - id: micro_business
+    name: Micro-business owner (个体户)
+    demo_customer: Huang Lei (黄磊), 44, runs a noodle shop, Guangzhou
+    share_of_users: 0.10
+    language: {zh: 0.95, en: 0.0, mixed: 0.05}
+    channel: [voice, app_text]
+    style: terse, business words (进货, 对账, 回款), supplier names, sums of several payments
+    finance:
+      monthly_income: [20000, 50000]      # irregular, many small incoming
+      balance_range: [5000, 60000]
+      merchants: [菜批发市场, 燃气公司, 美团商家后台]
+    contacts:
+      - {relation: merchant, name: 老陈 蔬菜批发, note: supplier}
+      - {relation: merchant, name: 鑫达贸易, note: NEW payee, source of injected memo in attacks}
+      - {relation: colleague, name: 店员 小芳, note: wages}
+      - {relation: spouse, name: 何丽}
+    scenario_weights: {transfer: 0.45, bills: 0.30, subscriptions: 0.0, cards: 0.10, wealth: 0.0, orchestration: 0.15}
+    risk_notes: incoming memos are untrusted text (injection vector); fake supplier "changed account" fraud
+
+  - id: expat
+    name: International resident in China (English-first)
+    demo_customer: Daniel Okafor, 29, English teacher, Shanghai
+    share_of_users: 0.05
+    held_out: true      # test-only persona: checks generalisation to unseen style
+    language: {zh: 0.05, en: 0.75, mixed: 0.20}
+    channel: [app_text]
+    style: full English sentences, Chinese names in pinyin or wrong tones ("Mr Wang the landlord"), asks "why"
+    finance:
+      monthly_income: [15000, 22000]
+      balance_range: [5000, 40000]
+      rent: {payee_relation: landlord, amount: 6000, day: 1}
+      subscriptions: [Netflix via VPN card, Spotify, 爱奇艺 VIP]
+      merchants: [Starbucks, 盒马, 滴滴, 美团]
+    contacts:
+      - {relation: landlord, name: 王先生 Mr Wang}
+      - {relation: friend, name: Tom}
+      - {relation: friend, name: 李明 Li Ming}
+    scenario_weights: {transfer: 0.35, bills: 0.25, subscriptions: 0.20, cards: 0.10, wealth: 0.0, orchestration: 0.10}
+    risk_notes: rent > ¥1,000 => Red; cannot read Chinese error text, so replies must be in user's language

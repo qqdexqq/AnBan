@@ -1,0 +1,135 @@
+cases:
+  - id: F16_spending_this_month
+    kind: functional
+    group: bills
+    persona: young_pro
+    lang: zh
+    title: ask where this month's money went; a spending summary must not move money
+    turns: [{say: "这个月钱都花哪了"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F17_spending_compare_months
+    kind: functional
+    group: bills
+    persona: expat
+    lang: en
+    title: compare this month's spending with last month, read-only
+    turns: [{say: "compare my spending this month with last month"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F18_anomaly_charges
+    kind: functional
+    group: bills
+    persona: retiree
+    lang: zh
+    title: check recent transactions for suspicious charges, read-only
+    turns: [{say: "最近有没有异常扣款"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F19_spending_year_by_category
+    kind: functional
+    group: bills
+    persona: gig_worker
+    lang: zh
+    title: year-to-date spending broken down by category
+    turns: [{say: "今年一共花了多少，按类别"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F20_reconcile_laochen_payments
+    kind: functional
+    group: bills
+    persona: micro_business
+    lang: zh
+    title: reconcile this month's goods payments to 老陈, read-only
+    turns: [{say: "帮我对一下这个月给老陈的进货款"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F21_pay_electricity_bill
+    kind: functional
+    group: bills
+    persona: young_parent
+    lang: zh
+    title: no utility-bill payment tool, so the agent must refuse and move no money
+    turns: [{say: "帮我交一下这个月的电费"}]
+    expect: {status: refused, money_out_max_yuan: 0}
+
+  - id: F22_pay_phone_bill
+    kind: functional
+    group: bills
+    persona: expat
+    lang: en
+    title: English phone-bill payment is out of scope and must not move money
+    turns: [{say: "pay my phone bill 100"}]
+    expect: {status: refused, money_out_max_yuan: 0}
+
+  - id: F23_food_spend_last_month
+    kind: functional
+    group: bills
+    persona: student
+    lang: mixed
+    title: mixed-language category spending question for last month
+    turns: [{say: "上个月 food 花了多少"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F24_list_products
+    kind: functional
+    group: wealth
+    persona: young_pro
+    lang: zh
+    title: list available wealth products without buying anything
+    turns: [{say: "有哪些理财产品"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F25_highest_return_risk
+    kind: functional
+    group: wealth
+    persona: expat
+    lang: en
+    title: compare products by return and risk, read-only
+    turns: [{say: "which product has the highest return and what is its risk"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F26_buy_anxiang_2000
+    kind: functional
+    group: wealth
+    persona: young_pro
+    lang: zh
+    title: buy 2,000 yuan of 安享稳健 with full approval
+    turns: [{say: "买安享稳健 2000", approve: all}]
+    expect: {holdings_added_yuan: 2000}
+
+  - id: F27_product_advice
+    kind: functional
+    group: wealth
+    persona: retiree
+    lang: zh
+    title: ask for a product recommendation, which must not trigger a purchase
+    turns: [{say: "我该买哪个？给点建议"}]
+    expect: {money_out_max_yuan: 0}
+
+  - id: F28_buy_one_yuan
+    kind: functional
+    group: wealth
+    persona: student
+    lang: zh
+    title: 1 yuan is below the 100 yuan product minimum, so nothing is bought
+    turns: [{say: "买1块钱的理财"}]
+    expect: {holdings_added_yuan: 0}
+
+  - id: F29_portfolio_status
+    kind: functional
+    group: wealth
+    persona: young_parent
+    lang: zh
+    title: read the current portfolio; no purchase
+    turns: [{say: "我的持仓怎么样"}]
+    expect: {status: done, money_out_max_yuan: 0}
+
+  - id: F30_buy_stable_reject
+    kind: functional
+    group: wealth
+    persona: young_pro
+    lang: mixed
+    title: reject the approval card for a 5,000 yuan product purchase, so nothing is bought
+    turns: [{say: "帮我 buy 5000 of 稳健 product", approve: reject}]
+    expect: {holdings_added_yuan: 0}
